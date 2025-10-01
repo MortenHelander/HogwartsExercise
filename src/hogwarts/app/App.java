@@ -4,13 +4,15 @@ import hogwarts.app.UI.TextUI;
 import hogwarts.data.House;
 import hogwarts.data.Student;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
     ArrayList<Student> students = new ArrayList<>();
-    Scanner scan = new Scanner(System.in);
     TextUI ui = new TextUI();
+    Scanner scan = new Scanner(System.in);
 
     //Constructor.
     public App() {
@@ -25,18 +27,42 @@ public class App {
 
     private void loadStudents() {
         //Create the four houses.
-        House gryffindor = new House("Gryffindor");
+       /* House gryffindor = new House("Gryffindor");
         House slytherin = new House("Slytherin");
         House hufflepuff = new House("Hufflepuff");
-        House ravenclaw = new House("Ravenclaw");
+        House ravenclaw = new House("Ravenclaw");*/
+
+
+        try {
+            File file = new File("students.csv");
+            System.out.println("Indhold af filen:"+ file.getName());
+
+            Scanner scan = new Scanner(file);
+            scan.useDelimiter("[;\n]");
+            String header = scan.nextLine();
+
+
+            while(scan.hasNext()) {
+                String name = scan.next();
+                String house = scan.next();
+                int age = Integer.parseInt(scan.next().trim());
+
+                House house1 = new House(house);
+                Student student = new Student(name, house1, age );
+                students.add(student);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
 
         //Create students.
-        Student harry = new Student("Harry Potter", gryffindor, 17);
+        /*Student harry = new Student("Harry Potter", gryffindor, 17);
         Student ron = new Student("Ronald Weasley", gryffindor, 17);
         Student hermione = new Student("Hermione Granger", gryffindor, 17);
         students.add(harry);
         students.add(ron);
-        students.add(hermione);
+        students.add(hermione);*/
     }
 
     private void showMenu() {
